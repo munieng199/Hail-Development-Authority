@@ -1,0 +1,285 @@
+ 
+ .feature-card {
+    background: linear-gradient(135deg, #064e3b, #065f4a); /* أخضر داكن متدرج */
+    color: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: #d1fae5; /* أخضر فاتح للأيقونة */
+}
+
+.feature-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #ffffff; /* نص فاتح */
+}
+
+.feature-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #ffffff; /* نص فاتح */
+}
+/* خصائص الهيدر المميزة */
+.header-section {
+     background: linear-gradient(135deg, #064e3b, #065f3b); 
+    color: white;
+    padding: 2.5rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-bottom-left-radius: 80px 40px;
+    border-bottom-right-radius: 80px 40px;
+    position: relative;
+    overflow: hidden;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+/* خلفية متحركة للهيدر */
+.header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    animation: shimmer 8s infinite linear;
+    pointer-events: none;
+}
+
+/* تأثير التوهج عند التمرير */
+.header-section:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: slideGlow 2s infinite;
+    pointer-events: none;
+}
+
+/* خصائص حاوية الشعار */
+.logo-container {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* خصائص الشعار */
+.logo {
+    max-width: 120px;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s 
+ease;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    background-color: currentColor;
+}
+
+.logo:hover {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* خصائص العنوان الرئيسي */
+.main-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+    animation: titleGlow 3s infinite alternate;
+}
+
+/* خصائص العنوان الفرعي */
+.subtitle {
+    font-size: 1.3rem;
+    font-weight: 400;
+    opacity: 0.95;
+    position: relative;
+    z-index: 2;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* خصائص عنصر SVG الزخرفي */
+.header-svg {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.header-svg svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 -5px 10px rgba(255, 255, 255, 0.3));
+}
+
+.footer-section {
+    background: linear-gradient(135deg, #064e3b, #065f55);
+    color: #fff;
+    padding: 1.5rem 0;
+    text-align: center;
+    border-top-left-radius: 80px 40px;
+    border-top-right-radius: 80px 40px;
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.footer-text {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* تأثيرات الحركة */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes slideGlow {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes titleGlow {
+    0% {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    100% {
+        text-shadow: 2px 2px 20px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* تأثيرات إضافية للهيدر */
+.header-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* تأثير النبض للشعار */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+.logo-container:hover .logo {
+    animation: pulse 1.5s infinite;
+}
+
+/* تأثير التدرج الديناميكي */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.header-section {
+ 
+    animation: gradientShift 10s ease infinite;
+}
+
+/* تأثير الموجة المتحركة */
+@keyframes waveMove {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-25px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.header-svg svg path {
+    animation: waveMove 8s ease-in-out infinite;
+}
+
+/* التصميم المتجاوب */
+@media (max-width: 768px) {
+    .header-section {
+        border-bottom-left-radius: 50px 25px;
+        border-bottom-right-radius: 50px 25px;
+        padding: 2rem 0;
+    }
+    
+    .main-title {
+        font-size: 2.2rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .logo {
+        max-width: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-section {
+        border-bottom-left-radius: 30px 15px;
+        border-bottom-right-radius: 30px 15px;
+        padding: 1.5rem 0;
+    }
+    
+    .main-title {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .logo {
+        max-width: 80px;
+    }
+    
+    .header-svg {
+        height: 60px;
+    }
+}
+ 

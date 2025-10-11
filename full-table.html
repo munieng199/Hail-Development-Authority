@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الكامل - نظام تحليل بيانات المهام</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/full-table.css">
+    <link rel="stylesheet" href="./css/table.css">
+    <style>
+        /* تظليل بناءً على الصورة */
+        tr.highlight-yellow {
+            background-color: yellow !important;
+        }
+        tr.highlight-orange {
+            background-color: orange !important;
+        }
+
+    </style>
+    <style>
+/* Excel */
+.btn-excel {
+    background: linear-gradient(135deg, #1d976c, #2ecc71);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+.btn-excel:hover {
+    background: linear-gradient(135deg, #2ecc71, #1d976c);
+}
+
+/* PDF */
+.btn-pdf {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+.btn-pdf:hover {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* Print */
+.btn-print {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+.btn-print:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+/* خصائص عامة */
+.d-flex .btn {
+    padding: 6px 14px;
+    font-weight: 500;
+}
+</style>
+
+</head>
+<body>
+    <!-- الرأس -->
+    <header class="dashboard-header border-bottom">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <!-- الشعار والنص -->
+                <div class="col-12 col-md-3 d-flex align-items-center justify-content-center justify-content-md-start mb-3 mb-md-0">
+                    <div class="logo-container p-2 rounded">
+                        <img src="./images/logo.png" alt="شعار هيئة التطوير بحائل" class="logo" style="width:70px; height:auto; background-color: white;">
+                        <span class="logo-text d-none d-md-inline">هيئة التطوير بحائل</span>
+                    </div>
+                </div>
+                
+                <!-- العنوان الرئيسي -->
+                <div class="col-12 col-md-6 text-center mb-3 mb-md-0">
+                    <h1 class="dashboard-title">جدول المهام التفصيلي</h1>
+                </div>
+                
+                <!-- الأزرار -->
+                <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end">
+                    <div class="header-actions d-flex gap-2">
+                        <button class="btn bg-white btn-sm text-dark" onclick="goToDashboard()">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="d-none d-sm-inline ">لوحة المعلومات</span>
+                            <span class="d-sm-none">لوحة</span>
+                        </button>
+                        <button class="btn bg-white btn-sm text-dark" onclick="goBack()">
+                            <i class="fas fa-home"></i>
+                            <span class="d-none d-sm-inline">الرئيسية</span>
+                            <span class="d-sm-none">رئيسية</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="table-main">
+        <div class="container-fluid">
+            <!-- قسم الفلاتر -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="filters-card">
+                        <div class="filters-header">
+                            <h3 class="filters-title">
+                                <i class="fas fa-filter"></i>
+                                فلاتر البحث والتصفية
+                            </h3>
+                            <button class="btn btn-custom btn-sm" id="clearFilters">
+                                <i class="fas fa-times"></i>
+                                مسح الفلاتر
+                            </button>
+                        </div>
+                        
+                        <div class="filters-content">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label class="form-label">البحث في المهام</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="searchInput" placeholder="ابحث في المهام...">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label class="form-label">فلترة حسب الإدارة</label>
+                                    <select class="form-select" id="departmentFilter">
+                                        <option value="">جميع الإدارات</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label class="form-label">فلترة حسب الحالة</label>
+                                    <select class="form-select" id="statusFilter">
+                                        <option value="">جميع الحالات</option>
+                                        <option value="مكتمل">مكتمل</option>
+                                        <option value="متأخر">متأخر</option>
+                                        <option value="جاري العمل">جاري العمل</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label class="form-label">فلترة حسب المسؤول</label>
+                                    <select class="form-select" id="responsibleFilter">
+                                        <option value="">جميع المسؤولين</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">من تاريخ البدء</label>
+                                    <input type="date" class="form-control" id="startDateFrom">
+                                </div>
+                                
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">إلى تاريخ البدء</label>
+                                    <input type="date" class="form-control" id="startDateTo">
+                                </div>
+                                
+                                <div class="col-lg-4 col-md-12 mb-3">
+                                    <label class="form-label">نسبة التقدم</label>
+                                    <div class="progress-filter">
+                                        <input type="range" class="form-range" id="progressFilter" min="0" max="100" value="0">
+                                        <div class="progress-labels">
+                                            <span>0%</span>
+                                            <span id="progressValue">0%</span>
+                                            <span>100%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- عناصر التحكم في الجدول -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="table-info">
+                        <span class="results-count">
+                            عرض <span id="currentResults">0</span> من <span id="totalResults">0</span> مهمة
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="table-controls">
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-excel btn-sm" id="exportExcel">
+                                <i class="fas fa-file-excel"></i>
+                                <span class="d-none d-md-inline">تصدير Excel</span>
+                            </button>
+                            <button class="btn btn-pdf btn-sm" id="exportPDF">
+                                <i class="fas fa-file-pdf"></i>
+                                <span class="d-none d-md-inline">تصدير PDF</span>
+                            </button>
+                            <button class="btn btn-print btn-sm" id="printTable">
+                                <i class="fas fa-print"></i>
+                                <span class="d-none d-md-inline">طباعة</span>
+                            </button>
+                        </div>
+                        
+                        <select class="form-select form-select-sm ms-2" id="pageSize" style="width: auto; display: inline-block;">
+                            <option value="10">10 صفوف</option>
+                            <option value="25" selected>25 صف</option>
+                            <option value="50">50 صف</option>
+                            <option value="100">100 صف</option>
+                            <option value="all">جميع الصفوف</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الجدول -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-card">
+                        <div class="table-container">
+                            <table class="table table-hover" id="tasksTable">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th class="sortable" data-column="الموضوع/المهمة">
+                                            <span class="d-none d-sm-inline">الموضوع/المهمة</span>
+                                            <span class="d-sm-none">المهمة</span>
+                                            <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable" data-column="الإدارة">
+                                            الإدارة
+                                            <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable d-none d-md-table-cell" data-column="المسؤول عن المهمه">
+                                            المسؤول
+                                            <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable d-none d-lg-table-cell" data-column="تاريخ  بدء المهمه">
+                                            تاريخ البدء
+                                            <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable d-none d-lg-table-cell" data-column="التاريخ المتوقع لانهاء المهمة">
+                                            التاريخ المتوقع
+                                            <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable" data-column="الحالة">
+                                            الحالة
+                                            <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable d-none d-md-table-cell" data-column="نسبة التقدم">
+                                            نسبة التقدم
+                                            <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- سيتم ملؤها بواسطة JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- الترقيم -->
+                        <div class="table-pagination">
+                            <nav aria-label="جدول المهام">
+                                <ul class="pagination justify-content-center" id="pagination">
+                                    <!-- سيتم ملؤها بواسطة JavaScript -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- حالة التحميل -->
+            <div id="loadingState" class="loading-container" style="display: none;">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p>جاري تحميل البيانات...</p>
+            </div>
+
+            <!-- حالة عدم وجود نتائج -->
+            <div id="noDataState" class="no-data-container" style="display: none;">
+                <div class="no-data-content">
+                    <i class="fas fa-search"></i>
+                    <h3>لا توجد نتائج</h3>
+                    <p>لا توجد مهام تطابق معايير البحث المحددة</p>
+                    <button class="btn btn-primary" id="resetFilters">
+                        <i class="fas fa-refresh"></i>
+                        إعادة تعيين الفلاتر
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- نافذة تفاصيل المهمة -->
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="taskModalLabel">تفاصيل المهمة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                </div>
+                <div class="modal-body" id="taskModalBody">
+                    <!-- سيتم ملؤها بواسطة JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- السكريبتات -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="./js/full-table.js"></script>
+</body>
+</html>

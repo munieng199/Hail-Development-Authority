@@ -1,0 +1,862 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+
+ 
+/* إعدادات عامة */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    direction: rtl;
+    text-align: right;
+}
+
+/* متغيرات الألوان */
+:root {
+    --primary-color: #006C35;
+    --secondary-color: #ffffff;
+    --accent-color: #4CAF50;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    --border-color: #e0e6ed;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* رأس الصفحة */
+.header-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #004d26 100%);
+    color: white;
+    padding: 2rem 0;
+    box-shadow: var(--shadow);
+    border-bottom-left-radius: 50px 30px;
+    border-bottom-right-radius: 50px 30px;
+    position: relative;
+}
+
+.logo-container {
+    text-align: center;
+}
+
+.logo {
+    max-width: 120px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+/* عنصر SVG الزخرفي */
+.header-svg {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    overflow: hidden;
+}
+
+.header-svg svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* المحتوى الرئيسي */
+.main-content {
+    padding: 4rem 0;
+}
+
+.upload-section {
+    margin-bottom: 3rem;
+}
+
+.upload-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.upload-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    border-radius: 20px 20px 0 0;
+}
+
+.upload-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* الشعار الدائري المميز */
+.circular-logo-container {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 108, 53, 0.3);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 0 auto 1rem;
+}
+
+.circular-logo {
+    width: 80%;
+    height: auto;
+    object-fit: contain;
+}
+
+.circular-logo-container.animated {
+    animation: pulse 1.5s infinite;
+}
+
+.logo-replacement {
+    height: auto;
+    margin-bottom: 0;
+}
+
+.upload-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.upload-description {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* رفع الملفات */
+.file-input-container {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.file-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.file-input-label {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: var(--shadow);
+}
+
+.file-input-label:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.file-input-label i {
+    margin-left: 0.5rem;
+}
+
+/* معلومات الملف */
+.file-info {
+    background: #f8f9fa;
+    border: 2px dashed var(--primary-color);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease;
+}
+
+.file-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.file-info-text {
+    text-align: center;
+    width: 100%;
+}
+
+.file-name-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.file-details i {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+}
+
+.file-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.file-size {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* أزرار العمل */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: slideUp 0.5s ease;
+}
+
+.btn {
+    border-radius: 50px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn i {
+    margin-left: 0.5rem;
+}
+
+/* بطاقات الميزات */
+.feature-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.feature-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.feature-description {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+/* تذييل الصفحة */
+.footer-section {
+    background: var(--text-dark);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 4rem;
+}
+
+.footer-text {
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* الرسوم المتحركة */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 108, 53, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 108, 53, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 108, 53, 0);
+    }
+}
+
+/* التصميم المتجاوب */
+@media (max-width: 1400px) {
+    .main-title {
+        font-size: 2.3rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .upload-title {
+        font-size: 1.9rem;
+    }
+    
+    .upload-description {
+        font-size: 1rem;
+    }
+    
+    .feature-title {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-title {
+        font-size: 2.2rem;
+    }
+    
+    .header-section {
+        padding: 1.8rem 0;
+    }
+    
+    .main-content {
+        padding: 3.5rem 0;
+    }
+    
+    .upload-card {
+        padding: 2.8rem;
+    }
+    
+    .circular-logo-container {
+        width: 110px;
+        height: 110px;
+    }
+    
+    .upload-icon {
+        font-size: 3.8rem;
+        height: 110px;
+    }
+    
+    .feature-icon {
+        font-size: 2.8rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .header-section {
+        border-bottom-left-radius: 40px 25px;
+        border-bottom-right-radius: 40px 25px;
+        padding: 1.5rem 0;
+    }
+    
+    .main-content {
+        padding: 3rem 0;
+    }
+    
+    .upload-card {
+        padding: 2.5rem;
+    }
+    
+    .upload-title {
+        font-size: 1.8rem;
+    }
+    
+    .upload-description {
+        font-size: 0.95rem;
+    }
+    
+    .file-input-label {
+        padding: 0.9rem 1.8rem;
+        font-size: 1rem;
+    }
+    
+    .btn {
+        padding: 0.7rem 1.8rem;
+        font-size: 0.95rem;
+    }
+    
+    .feature-card {
+        padding: 1.8rem;
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+    }
+    
+    .feature-title {
+        font-size: 1.3rem;
+    }
+    
+    .circular-logo-container {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .upload-icon {
+        font-size: 3.5rem;
+        height: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        border-bottom-left-radius: 30px 20px;
+        border-bottom-right-radius: 30px 20px;
+        padding: 1.3rem 0;
+    }
+    
+    .main-title {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .main-content {
+        padding: 2.5rem 0;
+    }
+    
+    .upload-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .upload-title {
+        font-size: 1.5rem;
+    }
+    
+    .upload-description {
+        font-size: 0.9rem;
+    }
+    
+    .file-input-label {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .file-info {
+        padding: 1.2rem;
+    }
+    
+    .file-name {
+        font-size: 1rem;
+    }
+    
+    .file-size {
+        font-size: 0.85rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 300px;
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .feature-icon {
+        font-size: 2.2rem;
+    }
+    
+    .feature-title {
+        font-size: 1.2rem;
+    }
+    
+    .circular-logo-container {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .upload-icon {
+        font-size: 3rem;
+        height: 90px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-section {
+        border-bottom-left-radius: 20px 15px;
+        border-bottom-right-radius: 20px 15px;
+        padding: 1rem 0;
+    }
+    
+    .main-title {
+        font-size: 1.5rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .header-svg {
+        height: 40px;
+    }
+    
+    .main-content {
+        padding: 2rem 0;
+    }
+    
+    .upload-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .upload-title {
+        font-size: 1.3rem;
+    }
+    
+    .upload-description {
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .file-input-label {
+        padding: 0.7rem 1.3rem;
+        font-size: 0.9rem;
+    }
+    
+    .file-info {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .file-details i {
+        font-size: 1.3rem;
+    }
+    
+    .file-name {
+        font-size: 0.95rem;
+    }
+    
+    .file-size {
+        font-size: 0.8rem;
+    }
+    
+    .action-buttons {
+        gap: 0.7rem;
+    }
+    
+    .btn {
+        max-width: 280px;
+        padding: 0.65rem 1.3rem;
+        font-size: 0.85rem;
+    }
+    
+    .feature-card {
+        padding: 1.3rem;
+        margin-bottom: 1.3rem;
+    }
+    
+    .feature-icon {
+        font-size: 2rem;
+    }
+    
+    .feature-title {
+        font-size: 1.1rem;
+    }
+    
+    .feature-description {
+        font-size: 0.85rem;
+    }
+    
+    .circular-logo-container {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .upload-icon {
+        font-size: 2.5rem;
+        height: 80px;
+    }
+    
+    .footer-section {
+        padding: 1.5rem 0;
+        margin-top: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-title {
+        font-size: 1.4rem;
+    }
+    
+    .subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .upload-card {
+        padding: 1.3rem 0.8rem;
+    }
+    
+    .upload-title {
+        font-size: 1.2rem;
+    }
+    
+    .upload-description {
+        font-size: 0.8rem;
+        margin-bottom: 1.3rem;
+    }
+    
+    .file-input-label {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+    
+    .file-info {
+        padding: 0.8rem;
+        margin-bottom: 1.3rem;
+    }
+    
+    .file-details i {
+        font-size: 1.2rem;
+    }
+    
+    .file-name {
+        font-size: 0.9rem;
+    }
+    
+    .file-size {
+        font-size: 0.75rem;
+    }
+    
+    .btn {
+        max-width: 260px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.8rem;
+    }
+    
+    .feature-card {
+        padding: 1.1rem;
+        margin-bottom: 1.1rem;
+    }
+    
+    .feature-icon {
+        font-size: 1.8rem;
+    }
+    
+    .feature-title {
+        font-size: 1rem;
+    }
+    
+    .feature-description {
+        font-size: 0.8rem;
+    }
+    
+    .circular-logo-container {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .upload-icon {
+        font-size: 2.2rem;
+        height: 70px;
+    }
+}
+
+@media (max-width: 380px) {
+    .main-title {
+        font-size: 1.3rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .upload-card {
+        padding: 1.2rem 0.7rem;
+    }
+    
+    .upload-title {
+        font-size: 1.1rem;
+    }
+    
+    .upload-description {
+        font-size: 0.75rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .file-input-label {
+        padding: 0.55rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .file-info {
+        padding: 0.7rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .file-details i {
+        font-size: 1.1rem;
+    }
+    
+    .file-name {
+        font-size: 0.85rem;
+    }
+    
+    .file-size {
+        font-size: 0.7rem;
+    }
+    
+    .btn {
+        max-width: 240px;
+        padding: 0.55rem 1rem;
+        font-size: 0.75rem;
+    }
+    
+    .feature-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-icon {
+        font-size: 1.6rem;
+    }
+    
+    .feature-title {
+        font-size: 0.95rem;
+    }
+    
+    .feature-description {
+        font-size: 0.75rem;
+    }
+    
+    .circular-logo-container {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .upload-icon {
+        font-size: 2rem;
+        height: 65px;
+    }
+}
+
+/* تأثيرات التحميل */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid var(--primary-color);
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

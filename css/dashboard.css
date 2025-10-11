@@ -1,0 +1,527 @@
+/* أنماط لوحة المعلومات */
+
+/* رأس لوحة المعلومات */
+.dashboard-header {
+     background: linear-gradient(135deg, #064e3b, #065f40); 
+    color: white;
+    padding: 1rem 0;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo {
+    width: 50px;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.logo-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.dashboard-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+.header-actions {
+    text-align: left;
+}
+
+/* المحتوى الرئيسي */
+.dashboard-main {
+    padding: 2rem 0;
+    min-height: calc(100vh - 80px);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-title i {
+    color: var(--primary-color);
+}
+
+/* بطاقات الإحصائيات */
+.stats-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 15px 15px 0 0;
+}
+
+.stats-card.total-tasks::before {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+}
+
+.stats-card.completed-tasks::before {
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+}
+
+.stats-card.delayed-tasks::before {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+}
+
+.stats-card.in-progress-tasks::before {
+    background: linear-gradient(90deg, #f39c12, #e67e22);
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.stats-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.total-tasks .stats-icon {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+}
+
+.completed-tasks .stats-icon {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--accent-color);
+}
+
+.delayed-tasks .stats-icon {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.in-progress-tasks .stats-icon {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+}
+
+.stats-content {
+    flex: 1;
+}
+
+.stats-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1;
+}
+
+.stats-label {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin: 0.5rem 0 0 0;
+}
+
+.stats-percentage {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+.completed-tasks .stats-percentage {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--accent-color);
+}
+
+.delayed-tasks .stats-percentage {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.in-progress-tasks .stats-percentage {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+}
+
+/* بطاقات الرسوم البيانية */
+.chart-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    height: 400px;
+}
+
+.chart-header {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.chart-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chart-title i {
+    color: var(--primary-color);
+}
+
+.chart-container {
+    padding: 1rem;
+    height: calc(100% - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* بطاقة التقدم */
+.progress-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.progress-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.progress-title i {
+    color: var(--primary-color);
+}
+
+.progress-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.progress-bar-container {
+    position: relative;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 10px;
+    transition: width 1s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* بطاقات المعلومات */
+.info-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    height: 300px;
+}
+
+.info-header {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.info-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-title i {
+    color: var(--primary-color);
+}
+
+.info-content {
+    padding: 1rem;
+    height: calc(100% - 80px);
+    overflow-y: auto;
+}
+
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-list li:last-child {
+    border-bottom: none;
+}
+
+.info-list li::before {
+    content: '•';
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* بطاقة الجدول */
+.table-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.table-header {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.table-title i {
+    color: var(--primary-color);
+}
+
+.table-container {
+    overflow-x: auto;
+    max-height: 400px;
+}
+
+.table {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.table th {
+    background: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+    color: var(--text-dark);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-completed {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--accent-color);
+}
+
+.status-delayed {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.status-in-progress {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+}
+
+/* حالات التحميل */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: var(--text-light);
+}
+
+.loading-spinner {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.no-data-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+.no-data-content {
+    text-align: center;
+    color: var(--text-light);
+}
+
+.no-data-content i {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.no-data-content h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+/* التصميم المتجاوب */
+@media (max-width: 768px) {
+    .dashboard-title {
+        font-size: 1.3rem;
+    }
+    
+    .stats-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .stats-icon {
+        margin-bottom: 0.5rem;
+    }
+    
+    .chart-card {
+        height: 300px;
+    }
+    
+    .progress-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .info-card {
+        height: auto;
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-main {
+        padding: 1rem 0;
+    }
+    
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .chart-card {
+        height: 250px;
+    }
+    
+    .progress-card {
+        padding: 1.5rem;
+    }
+}
+
