@@ -131,47 +131,73 @@ function setupEventListeners() {
 // تهيئة الفلاتر
 function initializeFilters() {
     const departmentFilter = document.getElementById('departmentFilter');
-    const departments = [...new Set(tableData.tasks.map(task => task['الإدارة']).filter(dept => dept))];
+    const departmentsSet = new Set();
     
-    // قائمة الإدارات المسموح بها فقط
-    const allowedDepartments = [
-        'الإدارة العامة للتميز المؤسسي',
-        'إدارة الجودة الشاملة',
-        'إدارة تميز الأعمال',
-        'وحدة البحث والابتكار'
-    ];
-    
-    // إضافة الإدارات المسموح بها فقط دون تكرار
-    allowedDepartments.forEach(dept => {
-        if (departments.some(d => d.includes(dept.split(' ')[0]) || d === dept)) {
-            const option = document.createElement('option');
-            option.value = dept;
-            option.textContent = dept;
-            departmentFilter.appendChild(option);
+    // استخراج الإدارات مع التنظيف واستبعاد الإدارة العامة للتميز المؤسسي
+    tableData.tasks.forEach(task => {
+        if (task['الإدارة']) {
+            let deptName = task['الإدارة'].trim()
+                .replace(/\s+/g, ' ') // توحيد المسافات
+                .replace(/أ/g, 'ا') // توحيد الألف
+                .replace(/إ/g, 'ا'); // توحيد الألف
+            
+            // استبعاد الإدارة العامة للتميز المؤسسي
+            if (deptName && deptName !== '-' && deptName !== '' && 
+                !deptName.includes('الادارة العامة للتميز') && 
+                !deptName.includes('الإدارة العامة للتميز')) {
+                departmentsSet.add(deptName);
+            }
         }
     });
     
+    // تحويل Set إلى مصفوفة وترتيبها
+    const departments = Array.from(departmentsSet).sort();
+    
+    // إضافة جميع الإدارات إلى الفلتر
+    departments.forEach(dept => {
+        const option = document.createElement('option');
+        option.value = dept;
+        option.textContent = dept;
+        departmentFilter.appendChild(option);
+    });
+    
     const responsibleFilter = document.getElementById('responsibleFilter');
-    const responsiblePersons = [...new Set(tableData.tasks.map(task => task['المسؤول عن المهمه']).filter(person => person))];
+    const responsiblePersonsSet = new Set();
     
-    // قائمة الأسماء المسموح بها فقط
-    const allowedNames = [
-        'ابراهيم البدر',
-        'محمد الطواله',
-        'علي حكمي',
-        'عبداللطيف الهمشي',
-        'تركي الباتع',
-        'سعد البطي'
-    ];
-    
-    // إضافة الأسماء المسموح بها فقط دون تكرار
-    allowedNames.forEach(name => {
-        if (responsiblePersons.some(person => person.includes(name.split(' ')[0]))) {
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            responsibleFilter.appendChild(option);
+    // استخراج جميع الأسماء من المهام مع فصل الأسماء المتعددة
+    tableData.tasks.forEach(task => {
+        if (task['المسؤول عن المهمه']) {
+            const respText = task['المسؤول عن المهمه'].trim();
+            if (respText && respText !== '-' && respText !== '') {
+                // تقسيم الأسماء المتعددة (مفصولة بـ + أو ، أو /)
+                const names = respText.split(/[\+،,\/]/);
+                
+                names.forEach(name => {
+                    // تنظيف الاسم من الألقاب والمسافات الزائدة
+                    let cleanName = name.trim()
+                        .replace(/^(أ\.|م\.|د\.|أ |م |د |أ\s|م\s|د\s)/g, '') // إزالة الألقاب
+                        .replace(/\s+/g, ' ') // توحيد المسافات
+                        .replace(/أ/g, 'ا') // توحيد الألف
+                        .replace(/إ/g, 'ا') // توحيد الألف
+                        .trim();
+                    
+                    if (cleanName && cleanName !== '-' && cleanName !== '') {
+                        responsiblePersonsSet.add(cleanName);
+                    }
+                });
+            }
         }
+    });
+    
+    // تحويل Set إلى مصفوفة وترتيبها
+    const responsiblePersons = Array.from(responsiblePersonsSet).sort();
+    
+    // إضافة جميع المسؤولين إلى الفلتر
+    responsiblePersons.forEach(person => {
+        const option = document.createElement('option');
+        option.value = person;
+        option.textContent = person;
+        responsibleFilter.appendChild(option);
     });
 }
 
@@ -200,8 +226,14 @@ function applyFilters() {
             if (statusFilter === 'جاري العمل' && !taskStatus.includes('جاري') && taskStatus !== 'مستمرة') return false;
         }
         
-        // فلتر المسؤول
-        if (responsibleFilter && !task['المسؤول عن المهمه'].includes(responsibleFilter)) return false;
+        // فلتر المسؤول - البحث في الأسماء المنظفة
+        if (responsibleFilter) {
+            const respText = task['المسؤول عن المهمه'] || '';
+            const names = respText.split(/[\+،,\/]/).map(name => 
+                name.trim().replace(/^(أ\.|م\.|د\.|أ |م |د |أ\s|م\s|د\s)/g, '').trim()
+            );
+            if (!names.some(name => name.includes(responsibleFilter) || responsibleFilter.includes(name))) return false;
+        }
         
         // فلتر التاريخ
         const taskStart = new Date(task['تاريخ  بدء المهمه']);
