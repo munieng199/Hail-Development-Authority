@@ -244,24 +244,6 @@ function calculateSummary(tasks) {
         responsiblePersons: new Set()
     };
     
-    // قائمة الأسماء المسموح بها فقط
-    const allowedNames = [
-        'ابراهيم البدر',
-        'محمد الطواله',
-        'علي حكمي',
-        'عبداللطيف الهمشي',
-        'تركي الباتع',
-        'سعد البطي'
-    ];
-    
-    // قائمة الإدارات المسموح بها فقط
-    const allowedDepartments = [
-        'الإدارة العامة للتميز المؤسسي',
-        'إدارة الجودة الشاملة',
-        'ادارة تميز الاعمال',
-        'وحدة البحث والابتكار'
-    ];
-    
     tasks.forEach(task => {
         // حساب حالات المهام
         const status = task['الحالة'] || '';
@@ -273,28 +255,41 @@ function calculateSummary(tasks) {
             summary.inProgressTasks++;
         }
         
-        // جمع الإدارات مع التحقق من القائمة المسموح بها
+        // جمع جميع الإدارات من ملف الإكسل (مع استبعاد الإدارة العامة للتميز المؤسسي)
         if (task['الإدارة']) {
-            // تطبيع اسم الإدارة للمقارنة
-            const deptName = task['الإدارة'].trim();
-            if (allowedDepartments.some(allowed => deptName.includes(allowed.split(' ')[0]) || allowed.includes(deptName))) {
+            let deptName = task['الإدارة'].trim()
+                .replace(/\s+/g, ' ') // توحيد المسافات
+                .replace(/أ/g, 'ا') // توحيد الألف
+                .replace(/إ/g, 'ا'); // توحيد الألف
+            
+            // استبعاد الإدارة العامة للتميز المؤسسي
+            if (deptName && deptName !== '-' && deptName !== '' && 
+                !deptName.includes('الادارة العامة للتميز') && 
+                !deptName.includes('الإدارة العامة للتميز')) {
                 summary.departments.add(deptName);
             }
         }
         
-        // جمع المسؤولين مع التحقق من القائمة المسموح بها
+        // جمع جميع المسؤولين من ملف الإكسل بدون فلترة
         if (task['المسؤول عن المهمه']) {
-            // استخراج الاسم الأساسي فقط (بدون ألقاب)
-            const nameParts = task['المسؤول عن المهمه'].split(' ');
-            const firstName = nameParts[0];
-            const secondName = nameParts.length > 1 ? nameParts[1] : '';
-            
-            // التحقق من أن الاسم في القائمة المسموح بها
-            if (allowedNames.some(allowedName => {
-                const allowedParts = allowedName.split(' ');
-                return firstName === allowedParts[0] && (!allowedParts[1] || secondName === allowedParts[1]);
-            })) {
-                summary.responsiblePersons.add(firstName + ' ' + secondName);
+            const respText = task['المسؤول عن المهمه'].trim();
+            if (respText && respText !== '-' && respText !== '') {
+                // تقسيم الأسماء المتعددة (مفصولة بـ + أو ، أو /)
+                const names = respText.split(/[\+،,\/]/);
+                
+                names.forEach(name => {
+                    // تنظيف الاسم من الألقاب والمسافات الزائدة
+                    let cleanName = name.trim()
+                        .replace(/^(أ\.|م\.|د\.|أ |م |د |أ\s|م\s|د\s)/g, '') // إزالة الألقاب
+                        .replace(/\s+/g, ' ') // توحيد المسافات
+                        .replace(/أ/g, 'ا') // توحيد الألف
+                        .replace(/إ/g, 'ا') // توحيد الألف
+                        .trim();
+                    
+                    if (cleanName && cleanName !== '-' && cleanName !== '') {
+                        summary.responsiblePersons.add(cleanName);
+                    }
+                });
             }
         }
     });
@@ -453,3 +448,4 @@ window.ExcelAnalyzer = {
     getData: () => processedData,
     setData: (data) => { processedData = data; }
 };
+
