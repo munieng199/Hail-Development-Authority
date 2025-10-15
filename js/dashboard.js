@@ -195,8 +195,19 @@ function createDepartmentChart() {
     
     const departmentCounts = {};
     dashboardData.tasks.forEach(task => {
-        const dept = task['الإدارة'] || 'غير محدد';
-        departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
+        if (task['الإدارة']) {
+            let dept = task['الإدارة'].trim()
+                .replace(/\s+/g, ' ') // توحيد المسافات
+                .replace(/أ/g, 'ا') // توحيد الألف
+                .replace(/إ/g, 'ا'); // توحيد الألف
+            
+            // استبعاد الإدارة العامة للتميز المؤسسي
+            if (dept && dept !== '-' && dept !== '' && 
+                !dept.includes('الادارة العامة للتميز') && 
+                !dept.includes('الإدارة العامة للتميز')) {
+                departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
+            }
+        }
     });
     
     const labels = Object.keys(departmentCounts);
@@ -409,24 +420,6 @@ function calculateSummary(tasks) {
         responsiblePersons: new Set()
     };
     
-    // قائمة الإدارات المسموح بها فقط
-    const allowedDepartments = [
-        'الإدارة العامة للتميز المؤسسي',
-        'إدارة الجودة الشاملة',
-        'ادارة تميز الاعمال',
-        'وحدة البحث والابتكار'
-    ];
-    
-    // قائمة الأسماء المسموح بها فقط
-    const allowedNames = [
-        'ابراهيم البدر',
-        'محمد الطواله',
-        'علي حكمي',
-        'عبداللطيف الهمشي',
-        'تركي الباتع',
-        'سعد البطي'
-    ];
-    
     tasks.forEach(task => {
         // حساب الإجمالي
         summary.totalTasks++;
@@ -441,35 +434,41 @@ function calculateSummary(tasks) {
             summary.inProgressTasks++;
         }
         
-        // جمع الإدارات مع التحقق من القائمة المسموح بها
+        // جمع جميع الإدارات من ملف الإكسل (مع استبعاد الإدارة العامة للتميز المؤسسي)
         if (task['الإدارة']) {
-            const deptName = task['الإدارة'].trim();
-            if (allowedDepartments.some(allowed => 
-                deptName.includes(allowed.split(' ')[0]) || 
-                allowed.includes(deptName)
-            )) {
+            let deptName = task['الإدارة'].trim()
+                .replace(/\s+/g, ' ') // توحيد المسافات
+                .replace(/أ/g, 'ا') // توحيد الألف
+                .replace(/إ/g, 'ا'); // توحيد الألف
+            
+            // استبعاد الإدارة العامة للتميز المؤسسي
+            if (deptName && deptName !== '-' && deptName !== '' && 
+                !deptName.includes('الادارة العامة للتميز') && 
+                !deptName.includes('الإدارة العامة للتميز')) {
                 summary.departments.add(deptName);
             }
         }
         
-        // جمع المسؤولين مع التحقق من القائمة المسموح بها
+        // جمع جميع المسؤولين من ملف الإكسل بدون فلترة
         if (task['المسؤول عن المهمه']) {
-            const respName = task['المسؤول عن المهمه'].trim();
-            
-            // البحث عن تطابق مع أي اسم من القائمة المسموح بها
-            const matchedName = allowedNames.find(allowedName => {
-                // تقسيم الاسم المسموح به إلى أجزاء
-                const nameParts = allowedName.split(' ');
+            const respText = task['المسؤول عن المهمه'].trim();
+            if (respText && respText !== '-' && respText !== '') {
+                // تقسيم الأسماء المتعددة (مفصولة بـ + أو ، أو /)
+                const names = respText.split(/[\+،,\/]/);
                 
-                // التحقق من أن جميع أجزاء الاسم موجودة في اسم المسؤول
-                return nameParts.every(part => 
-                    respName.includes(part)
-                );
-            });
-            
-            // إذا وجد تطابق، أضف الاسم الأساسي (من القائمة المسموح بها)
-            if (matchedName) {
-                summary.responsiblePersons.add(matchedName);
+                names.forEach(name => {
+                    // تنظيف الاسم من الألقاب والمسافات الزائدة
+                    let cleanName = name.trim()
+                        .replace(/^(أ\.|م\.|د\.|أ |م |د |أ\s|م\s|د\s)/g, '') // إزالة الألقاب
+                        .replace(/\s+/g, ' ') // توحيد المسافات
+                        .replace(/أ/g, 'ا') // توحيد الألف
+                        .replace(/إ/g, 'ا') // توحيد الألف
+                        .trim();
+                    
+                    if (cleanName && cleanName !== '-' && cleanName !== '') {
+                        summary.responsiblePersons.add(cleanName);
+                    }
+                });
             }
         }
     });
