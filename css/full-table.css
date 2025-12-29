@@ -1,187 +1,117 @@
  
-/* أنماط الجدول الكامل */
+/* أنماط الجدول الكامل - محسّنة للعرض على الجوالات */
 
-.table-main {
-    padding: 2rem 0;
-    min-height: calc(100vh - 80px);
-    background: #f8f9fa;
+/* ========== المتغيرات الأساسية ========== */
+:root {
+    --primary-color: #006C35;
+    --accent-color: #4CAF50;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    --border-color: #e0e6ed;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.2);
+    --shadow-card: 0 10px 30px rgba(0, 108, 53, 0.12);
+    --gradient-primary: linear-gradient(135deg, #006C35 0%, #004d26 100%);
 }
 
-/* بطاقة الفلاتر */
+/* ========== المحتوى الرئيسي ========== */
+.table-main {
+    padding: 1rem 0;
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #f5f7fa 0%, #e3e9f2 100%);
+}
+
+/* ========== بطاقة الفلاتر ========== */
 .filters-card {
     background: white;
-    border-radius: 15px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    border: none;
     overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.filters-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 108, 53, 0.18);
 }
 
 .filters-header {
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem;
+    background: linear-gradient(135deg, var(--primary-color), #004d26);
+    color: white;
+    border-bottom: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .filters-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-dark);
     margin: 0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.filters-title i {
-    color: var(--primary-color);
-}
-
 .filters-content {
     padding: 1.5rem;
 }
 
-.form-label {
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
-}
-
-.form-control, .form-select {
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(0, 108, 53, 0.25);
-}
-
-.input-group-text {
-    background: var(--primary-color);
-    color: white;
-    border: 1px solid var(--primary-color);
-}
-
-/* فلتر نسبة التقدم */
-.progress-filter {
+/* ========== بطاقة الجدول الرئيسية ========== */
+.table-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    border: none;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
     position: relative;
 }
 
-.form-range {
-    width: 100%;
-    margin: 0.5rem 0;
+.table-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    z-index: 1;
 }
 
-.form-range::-webkit-slider-thumb {
-    background: var(--primary-color);
-}
-
-.form-range::-moz-range-thumb {
-    background: var(--primary-color);
-    border: none;
-}
-
-.progress-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--text-light);
-}
-
-#progressValue {
-    color: var(--primary-color);
-    font-weight: 600;
-}
-
-/* معلومات الجدول والتحكم */
-.table-info {
-    display: flex;
-    align-items: center;
-}
-
-.results-count {
-    font-size: 0.9rem;
-    color: var(--text-light);
-}
-
-.table-controls {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
-}
-
-/* بطاقة الجدول */
-.table-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-    overflow: hidden;
-}
-
+/* ========== حاوية الجدول ========== */
 .table-container {
     overflow-x: auto;
     max-height: 600px;
+    padding: 0.5rem;
 }
 
+/* ========== أنماط الجدول التقليدي للشاشات الكبيرة ========== */
 .table {
+    width: 100%;
     margin: 0;
-    font-size: 0.9rem;
+    border-collapse: collapse;
+    font-size: 0.95rem;
 }
 
 .table-header th {
-    background: var(--primary-color);
+    background: var(--gradient-primary);
     color: white;
     border: none;
     font-weight: 600;
+    padding: 1rem 0.75rem;
+    text-align: right;
     position: sticky;
     top: 0;
     z-index: 10;
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s ease;
-}
-
-.table-header th:hover {
-    background: #004d26;
-}
-
-.table-header th.sortable {
-    position: relative;
-    padding-left: 2rem;
-}
-
-.table-header th i {
-    position: absolute;
-    left: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-}
-
-.table-header th:hover i {
-    opacity: 1;
-}
-
-.table-header th.sort-asc i::before {
-    content: '\f0de'; /* fa-sort-up */
-}
-
-.table-header th.sort-desc i::before {
-    content: '\f0dd'; /* fa-sort-down */
 }
 
 .table tbody tr {
     transition: background-color 0.3s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .table tbody tr:hover {
@@ -189,12 +119,12 @@
 }
 
 .table td {
-    vertical-align: middle;
-    border-color: #f0f0f0;
     padding: 1rem 0.75rem;
+    border: none;
+    vertical-align: middle;
 }
 
-/* شارات الحالة */
+/* ========== شارات الحالة ========== */
 .status-badge {
     padding: 0.4rem 1rem;
     border-radius: 20px;
@@ -223,9 +153,9 @@
     border: 1px solid rgba(243, 156, 18, 0.3);
 }
 
-/* شريط التقدم في الجدول */
+/* ========== شريط التقدم ========== */
 .progress-bar-cell {
-    width: 120px;
+    min-width: 120px;
 }
 
 .progress-bar-small {
@@ -251,7 +181,7 @@
     text-align: center;
 }
 
-/* أزرار الإجراءات */
+/* ========== أزرار الإجراءات ========== */
 .action-buttons {
     display: flex;
     gap: 0.5rem;
@@ -277,408 +207,607 @@
     color: white;
 }
 
-.btn-edit {
-    background: rgba(243, 156, 18, 0.1);
-    color: #f39c12;
-}
-
-.btn-edit:hover {
-    background: #f39c12;
-    color: white;
-}
-
-/* ترقيم الصفحات */
-.table-pagination {
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-top: 1px solid var(--border-color);
-}
-
-.pagination .page-link {
-    color: var(--primary-color);
-    border: 1px solid #ddd;
-    padding: 0.5rem 0.75rem;
-    margin: 0 0.2rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.pagination .page-link:hover {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
-.pagination .page-item.active .page-link {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.pagination .page-item.disabled .page-link {
-    color: #6c757d;
-    background: #f8f9fa;
-}
-
-/* نافذة تفاصيل المهمة */
-.modal-content {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.modal-header {
-    background: var(--primary-color);
-    color: white;
-    border-radius: 15px 15px 0 0;
-}
-
-.modal-title {
-    font-weight: 600;
-}
-
-.btn-close {
-    filter: invert(1);
-}
-
-.task-detail-item {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-right: 4px solid var(--primary-color);
-}
-
-.task-detail-label {
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.task-detail-value {
-    color: var(--text-light);
-    line-height: 1.5;
-}
-
-/* حالات التحميل وعدم وجود بيانات */
-.loading-container, .no-data-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-    color: var(--text-light);
-}
-
-.loading-spinner {
-    font-size: 3rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.no-data-content {
-    text-align: center;
-}
-
-.no-data-content i {
-    font-size: 4rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.no-data-content h3 {
-    color: var(--text-dark);
-    margin-bottom: 1rem;
-}
-
-/* التصميم المتجاوب */
-@media (max-width: 1200px) {
-    .table-container {
-        max-height: 500px;
-    }
-    
-    .progress-bar-cell {
-        width: 100px;
-    }
-}
-
+/* =========================================== */
+/* ✅ التصحيح الرئيسي: تصميم البطاقات للشاشات الصغيرة */
+/* =========================================== */
 @media (max-width: 992px) {
+    /* إنشاء نظام البطاقات */
     .table-container {
-        max-height: 400px;
+        display: block !important;
+        max-height: none !important;
+        overflow-x: visible !important;
+        padding: 0.75rem !important;
+    }
+
+    .table-container table {
+        display: block !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .table-container table thead {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* تصميم حاوية البطاقات */
+    .table tbody {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.5rem !important;
+        padding: 0.5rem !important;
+        width: 100% !important;
+    }
+
+    /* تصميم كل بطاقة */
+    .table tbody tr {
+        display: block !important;
+        width: 100% !important;
+        background: white;
+        border-radius: 18px;
+        padding: 1.5rem !important;
+        margin: 0 !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        border: 1px solid rgba(0, 108, 53, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        animation: cardAppear 0.4s ease-out forwards;
+    }
+
+    /* أنيميشن ظهور البطاقات */
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* تأثيرات hover للبطاقات */
+    .table tbody tr:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 15px 35px rgba(0, 108, 53, 0.18) !important;
+    }
+
+    /* تظليل البطاقات */
+    .table tbody tr.highlight-yellow {
+        border-right: 6px solid #FFD700 !important;
+        background: linear-gradient(to left, rgba(255, 215, 0, 0.05), white) !important;
+    }
+
+    .table tbody tr.highlight-orange {
+        border-right: 6px solid #FF8C00 !important;
+        background: linear-gradient(to left, rgba(255, 140, 0, 0.05), white) !important;
+    }
+
+    .table tbody tr.highlight-blue {
+        border-right: 6px solid #3498db !important;
+        background: linear-gradient(to left, rgba(52, 152, 219, 0.05), white) !important;
+    }
+
+    /* ✅ التصحيح: إظهار جميع الخلايا في البطاقات */
+    .table tbody td {
+        display: block !important;
+        width: 100% !important;
+        padding: 1rem 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        text-align: right !important;
+        position: relative !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    /* ✅ التصحيح: إزالة الحدود من الخلية الأخيرة */
+    .table tbody td:last-child {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    /* ✅ التصحيح: تنسيق خاص للخلية الأولى (عنوان المهمة) */
+    .table tbody td:first-child {
+        padding-top: 0.5rem !important;
+        padding-bottom: 1rem !important;
+        border-bottom: 2px solid var(--primary-color) !important;
+        margin-bottom: 1rem !important;
+        font-weight: 700 !important;
+        color: var(--text-dark) !important;
+        font-size: 1.15rem !important;
+        background: linear-gradient(to right, rgba(0, 108, 53, 0.03), transparent) !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 0 !important;
+    }
+
+    /* ✅ التصحيح: تنسيق خاص للخلية الأخيرة (أزرار الإجراءات) */
+    .table tbody td:last-child {
+        padding-top: 1rem !important;
+        margin-top: 1rem !important;
+        border-top: 2px solid rgba(0, 0, 0, 0.1) !important;
+        background: linear-gradient(to right, rgba(52, 152, 219, 0.03), transparent) !important;
+        padding: 1rem !important;
+        border-radius: 10px !important;
+    }
+
+    /* ✅ التصحيح: إضافة التسميات للبطاقات مع أيقونات */
+    .table tbody td:not(:first-child):not(:last-child)::before {
+        content: attr(data-label);
+        font-weight: 700 !important;
+        color: var(--primary-color) !important;
+        text-align: right;
+        font-size: 0.9rem !important;
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+        padding: 0.5rem 1rem !important;
+        background: rgba(0, 108, 53, 0.05) !important;
+        border-radius: 8px !important;
+        border-right: 3px solid var(--primary-color) !important;
+    }
+
+    /* أيقونات التسميات المميزة */
+    .table tbody td:nth-child(2)::before {
+        content: '🏢 ' attr(data-label);
     }
     
-    .table-header th {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.85rem;
+    .table tbody td:nth-child(3)::before {
+        content: '👤 ' attr(data-label);
     }
     
-    .table td {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.85rem;
+    .table tbody td:nth-child(4)::before {
+        content: '📅 ' attr(data-label);
     }
     
-    .progress-bar-cell {
-        width: 90px;
+    .table tbody td:nth-child(5)::before {
+        content: '⏰ ' attr(data-label);
     }
     
-    .status-badge {
-        min-width: 70px;
-        padding: 0.3rem 0.8rem;
+    .table tbody td:nth-child(6)::before {
+        content: '📊 ' attr(data-label);
+    }
+    
+    .table tbody td:nth-child(7)::before {
+        content: '📈 ' attr(data-label);
+    }
+
+    /* ✅ التصحيح: تنسيق محتوى الخلايا */
+    .table tbody td:not(:first-child):not(:last-child) {
+        margin-bottom: 1rem !important;
+        padding: 0.75rem 1rem !important;
+        background: rgba(255, 255, 255, 0.7) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* ✅ التصحيح: تنسيق قيم البيانات */
+    .table tbody td:not(:first-child):not(:last-child) > div,
+    .table tbody td:not(:first-child):not(:last-child) > span,
+    .table tbody td:not(:first-child):not(:last-child) > .status-badge,
+    .table tbody td:not(:first-child):not(:last-child) > .progress-bar-cell {
+        display: block !important;
+        font-size: 1rem !important;
+        color: var(--text-dark) !important;
+        font-weight: 500 !important;
+        padding: 0.5rem 0 !important;
+        line-height: 1.4 !important;
+    }
+
+    /* ✅ التصحيح: تنسيق شارة الحالة في البطاقات */
+    .table tbody td .status-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.6rem 1.2rem !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        border-radius: 25px !important;
+        margin: 0.5rem 0 !important;
+        min-width: 120px !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* ألوان شارات الحالة في البطاقات */
+    .table tbody td .status-completed {
+        background: linear-gradient(135deg, #4CAF50, #2E7D32) !important;
+        color: white !important;
+        border: none !important;
+    }
+
+    .table tbody td .status-delayed {
+        background: linear-gradient(135deg, #f44336, #c62828) !important;
+        color: white !important;
+        border: none !important;
+    }
+
+    .table tbody td .status-in-progress {
+        background: linear-gradient(135deg, #ff9800, #ef6c00) !important;
+        color: white !important;
+        border: none !important;
+    }
+
+    /* ✅ التصحيح: تنسيق شريط التقدم في البطاقات */
+    .table tbody td .progress-bar-cell {
+        width: 100% !important;
+        padding: 1rem !important;
+        background: rgba(0, 108, 53, 0.05) !important;
+        border-radius: 15px !important;
+        margin: 0.5rem 0 !important;
+    }
+
+    .table tbody td .progress-bar-small {
+        height: 12px !important;
+        background: rgba(0, 0, 0, 0.1) !important;
+        border-radius: 6px !important;
+        overflow: hidden !important;
+        margin: 0.75rem 0 !important;
+    }
+
+    .table tbody td .progress-fill-small {
+        height: 100% !important;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color)) !important;
+        border-radius: 6px !important;
+        box-shadow: 0 2px 8px rgba(0, 108, 53, 0.3) !important;
+    }
+
+    .table tbody td .progress-text {
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        color: var(--primary-color) !important;
+        text-align: center !important;
+        margin-top: 0.5rem !important;
+    }
+
+    /* ✅ التصحيح: تنسيق أزرار الإجراءات في البطاقات */
+    .table tbody td .action-buttons {
+        display: flex !important;
+        gap: 1rem !important;
+        justify-content: center !important;
+        margin-top: 1rem !important;
+        padding: 1rem !important;
+        background: rgba(52, 152, 219, 0.08) !important;
+        border-radius: 15px !important;
+    }
+
+    .table tbody td .btn-action {
+        padding: 0.8rem 1.5rem !important;
+        font-size: 1rem !important;
+        border-radius: 12px !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.5rem !important;
+        flex: 1 !important;
+        min-width: 140px !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .table tbody td .btn-view {
+        background: linear-gradient(135deg, #3498db, #2980b9) !important;
+        color: white !important;
+    }
+
+    .table tbody td .btn-view:hover {
+        background: linear-gradient(135deg, #2980b9, #1c5a7a) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3) !important;
+    }
+
+    /* ✅ التصحيح: إظهار جميع العناصر المخفية سابقاً */
+    .table tbody td.d-none,
+    .table tbody td.d-md-table-cell,
+    .table tbody td.d-lg-table-cell,
+    .table tbody td[class*="d-"] {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        width: 100% !important;
+    }
+
+    /* تحسينات إضافية للشاشات الصغيرة */
+    @media (max-width: 768px) {
+        .table-main {
+            padding: 0.75rem;
+        }
+
+        .filters-card,
+        .table-card {
+            border-radius: 18px;
+            margin-bottom: 1rem;
+        }
+
+        .filters-header {
+            padding: 1rem;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .filters-content {
+            padding: 1.2rem;
+        }
+
+        .filters-content .row > div {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            border: 2px solid rgba(0, 108, 53, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 108, 53, 0.15);
+        }
+
+        .table-controls {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .table-info {
+            padding: 1rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .results-count {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .btn-excel, .btn-pdf, .btn-print {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 0.25rem;
+        }
+
+        .btn-excel {
+            background: linear-gradient(135deg, #1d976c, #2ecc71);
+        }
+
+        .btn-pdf {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+
+        #pageSize {
+            width: 100% !important;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: 2px solid rgba(0, 108, 53, 0.1);
+        }
+
+        .table-pagination {
+            padding: 1.2rem;
+            background: linear-gradient(to right, rgba(0, 108, 53, 0.03), rgba(0, 108, 53, 0.01));
+            border-top: 2px solid rgba(0, 108, 53, 0.1);
+        }
+
+        .pagination .page-link {
+            padding: 0.7rem 1.2rem;
+            margin: 0.25rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            border: 2px solid rgba(0, 108, 53, 0.1);
+            background: white;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pagination .page-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 108, 53, 0.2);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, var(--primary-color), #004d26);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0, 108, 53, 0.3);
+        }
+
+        /* تحسينات البطاقات للشاشات الصغيرة جداً */
+        .table tbody tr {
+            padding: 1.2rem !important;
+            margin-bottom: 1rem !important;
+            border-radius: 16px !important;
+        }
+
+        .table tbody td:first-child {
+            font-size: 1.05rem !important;
+            padding: 0.6rem 0.8rem !important;
+        }
+
+        .table tbody td:not(:first-child):not(:last-child) {
+            padding: 0.6rem 0.8rem !important;
+            margin: 0.4rem 0 !important;
+        }
+
+        .table tbody td:not(:first-child):not(:last-child)::before {
+            font-size: 0.85rem !important;
+            padding: 0.4rem 0.8rem !important;
+        }
+
+        .table tbody td:last-child {
+            padding: 0.8rem !important;
+            margin-top: 0.8rem !important;
+        }
+
+        .table tbody td .status-badge {
+            padding: 0.5rem 1rem !important;
+            font-size: 0.85rem !important;
+            min-width: 100px !important;
+        }
+
+        .table tbody td .progress-bar-cell {
+            padding: 0.8rem !important;
+        }
+
+        .table tbody td .progress-bar-small {
+            height: 10px !important;
+        }
+
+        .table tbody td .progress-text {
+            font-size: 0.9rem !important;
+        }
+
+        .table tbody td .action-buttons {
+            padding: 0.8rem !important;
+            flex-direction: column !important;
+            gap: 0.5rem !important;
+        }
+
+        .table tbody td .btn-action {
+            padding: 0.7rem 1.2rem !important;
+            font-size: 0.9rem !important;
+            min-width: 100% !important;
+            width: 100% !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .table tbody tr {
+            padding: 1rem !important;
+            border-radius: 14px !important;
+        }
+
+        .table tbody td:first-child {
+            font-size: 1rem !important;
+            padding: 0.5rem 0.6rem !important;
+        }
+
+        .table tbody td:not(:first-child):not(:last-child) {
+            padding: 0.5rem 0.6rem !important;
+            margin: 0.3rem 0 !important;
+        }
+
+        .table tbody td:not(:first-child):not(:last-child)::before {
+            font-size: 0.8rem !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+
+        .table tbody td:last-child {
+            padding: 0.6rem !important;
+            margin-top: 0.6rem !important;
+        }
+
+        .table tbody td .status-badge {
+            padding: 0.4rem 0.8rem !important;
+            font-size: 0.8rem !important;
+            min-width: 90px !important;
+        }
+
+        .table tbody td .progress-bar-cell {
+            padding: 0.6rem !important;
+        }
+
+        .table tbody td .progress-bar-small {
+            height: 8px !important;
+        }
+
+        .table tbody td .progress-text {
+            font-size: 0.85rem !important;
+        }
+
+        .table tbody td .btn-action {
+            padding: 0.6rem 1rem !important;
+            font-size: 0.85rem !important;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .table tbody tr {
+            padding: 0.8rem !important;
+            border-radius: 12px !important;
+        }
+
+        .table tbody td:first-child {
+            font-size: 0.95rem !important;
+            padding: 0.4rem 0.5rem !important;
+        }
+
+        .table tbody td:not(:first-child):not(:last-child) {
+            padding: 0.4rem 0.5rem !important;
+            margin: 0.2rem 0 !important;
+        }
+
+        .table tbody td:not(:first-child):not(:last-child)::before {
+            font-size: 0.75rem !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+
+        .table tbody td:last-child {
+            padding: 0.5rem !important;
+            margin-top: 0.5rem !important;
+        }
+
+        .table tbody td .status-badge {
+            padding: 0.3rem 0.6rem !important;
+            font-size: 0.75rem !important;
+            min-width: 80px !important;
+        }
+
+        .table tbody td .progress-bar-cell {
+            padding: 0.5rem !important;
+        }
+
+        .table tbody td .progress-bar-small {
+            height: 6px !important;
+        }
+
+        .table tbody td .progress-text {
+            font-size: 0.8rem !important;
+        }
+
+        .table tbody td .btn-action {
+            padding: 0.5rem 0.8rem !important;
+            font-size: 0.8rem !important;
+        }
     }
 }
 
-@media (max-width: 768px) {
-    .table-main {
-        padding: 1rem 0;
-    }
-    
-    .filters-content .row > div {
-        margin-bottom: 1rem;
-    }
-    
-    .table-controls {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: stretch;
-    }
-    
-    .btn-group {
-        width: 100%;
-    }
-    
-    .btn-group .btn {
-        flex: 1;
-    }
-    
-    .table-container {
-        font-size: 0.8rem;
-        max-height: 350px;
-    }
-    
-    .table th, .table td {
-        padding: 0.5rem 0.3rem;
-        white-space: nowrap;
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-action {
-        width: 100%;
-    }
-    
-    .dashboard-title {
-        font-size: 1.3rem;
-    }
-    
-    .header-actions {
-        text-align: center;
-        margin-top: 1rem;
-    }
-    
-    .table-info {
-        margin-bottom: 0.5rem;
-        justify-content: center;
-    }
-    
-    .table-controls {
-        margin-bottom: 1rem;
-    }
-    
-    .progress-bar-cell {
-        width: 80px;
-    }
-    
-    .status-badge {
-        min-width: 65px;
-        padding: 0.25rem 0.6rem;
-        font-size: 0.75rem;
-    }
-    
-    .pagination .page-link {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .filters-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-    
-    .table-info, .table-controls {
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    
-    .modal-dialog {
-        margin: 1rem;
-    }
-    
-    .task-detail-item {
-        padding: 0.75rem;
-    }
-    
-    .table-container {
-        max-height: 300px;
-        font-size: 0.75rem;
-    }
-    
-    .table th, .table td {
-        padding: 0.4rem 0.2rem;
-    }
-    
-    .table-header th {
-        font-size: 0.8rem;
-    }
-    
-    .action-buttons {
-        gap: 0.3rem;
-    }
-    
-    .btn-action {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-    }
-    
-    .progress-bar-cell {
-        width: 70px;
-    }
-    
-    .progress-text {
-        font-size: 0.7rem;
-    }
-    
-    .status-badge {
-        min-width: 60px;
-        padding: 0.2rem 0.5rem;
-        font-size: 0.7rem;
-    }
-    
-    .pagination {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .pagination .page-link {
-        margin: 0.1rem;
-        padding: 0.35rem 0.5rem;
-        font-size: 0.8rem;
-    }
-    
-    .filters-title {
-        font-size: 1.1rem;
-    }
-    
-    .form-label {
-        font-size: 0.9rem;
-    }
-    
-    .form-control, .form-select {
-        padding: 0.6rem;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .table-container {
-        max-height: 250px;
-        font-size: 0.7rem;
-    }
-    
-    .table th, .table td {
-        padding: 0.3rem 0.15rem;
-    }
-    
-    .table-header th {
-        font-size: 0.75rem;
-        padding-left: 1.5rem;
-    }
-    
-    .table-header th.sortable i {
-        left: 0.3rem;
-    }
-    
-    .action-buttons {
-        flex-direction: row;
-        gap: 0.2rem;
-    }
-    
-    .btn-action {
-        padding: 0.2rem 0.4rem;
-        font-size: 0.7rem;
-    }
-    
-    .progress-bar-cell {
-        width: 60px;
-    }
-    
-    .progress-text {
-        font-size: 0.65rem;
-    }
-    
-    .status-badge {
-        min-width: 55px;
-        padding: 0.15rem 0.4rem;
-        font-size: 0.65rem;
-    }
-    
-    .pagination .page-link {
-        margin: 0.05rem;
-        padding: 0.3rem 0.4rem;
-        font-size: 0.75rem;
-    }
-}
-
-/* تحسينات إضافية */
-.table-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
-    border-radius: 15px 15px 0 0;
-}
-
-.table-card {
-    position: relative;
-}
-
-/* تأثيرات التحميل */
-.table-loading {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-.table-loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 30px;
-    height: 30px;
-    margin: -15px 0 0 -15px;
-    border: 3px solid var(--primary-color);
-    border-top: 3px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    z-index: 1000;
-}
-
-/* تمييز النتائج المطابقة للبحث */
-.highlight {
-    background-color: yellow;
-    font-weight: bold;
-}
-
-/* أنماط التصدير والطباعة */
+/* ========== أنماط التصدير والطباعة ========== */
 @media print {
     .dashboard-header,
     .filters-card,
@@ -686,18 +815,153 @@
     .table-pagination {
         display: none !important;
     }
-    
+
     .table-card {
-        box-shadow: none;
-        border: 1px solid #ddd;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
     }
-    
+
     .table {
-        font-size: 0.8rem;
+        font-size: 0.8rem !important;
     }
-    
+
     .table th {
         background: #f8f9fa !important;
         color: #000 !important;
     }
 }
+
+/* ========== حالات التحميل وعدم وجود بيانات ========== */
+.loading-container,
+.no-data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: 3rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    border: 2px solid rgba(0, 108, 53, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-container::before,
+.no-data-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 6px;
+    background: var(--gradient-primary);
+}
+
+.loading-spinner {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    animation: spin 1s linear infinite;
+    background: rgba(0, 108, 53, 0.1);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 8px 16px rgba(0, 108, 53, 0.2);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.no-data-content {
+    max-width: 500px;
+    padding: 2rem;
+}
+
+.no-data-content i {
+    font-size: 5rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.no-data-content h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.no-data-content p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.no-data-content .btn {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 15px;
+    background: var(--gradient-primary);
+    border: none;
+    box-shadow: 0 8px 20px rgba(0, 108, 53, 0.3);
+    transition: all 0.3s ease;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.no-data-content .btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 108, 53, 0.4);
+}
+
+.no-data-content .btn:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 108, 53, 0.3);
+}
+
+/* ========== تحسينات إضافية للعرض على الجوالات ========== */
+@media (max-width: 768px) {
+    .loading-container, .no-data-container {
+        min-height: 50vh;
+        padding: 2rem;
+        margin: 1rem;
+    }
+
+    .no-data-content i {
+        font-size: 3.5rem;
+    }
+
+    .no-data-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .no-data-content p {
+        font-size: 1rem;
+    }
+
+    .no-data-content .btn {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+}
+ 
