@@ -505,6 +505,78 @@
         height: auto;
         min-height: 250px;
     }
+    
+    .table {
+        display: block;
+    }
+    
+    .table thead {
+        display: none;
+    }
+    
+    .table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 0.5rem;
+    }
+    
+    .table tr {
+        display: block;
+        background: white;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border: none;
+        page-break-inside: avoid;
+    }
+    
+    .table td {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f0f0f0;
+        align-items: center;
+    }
+    
+    .table td:last-child {
+        border-bottom: none;
+    }
+    
+    .table td::before {
+        font-weight: 600;
+        color: var(--primary-color);
+        white-space: nowrap;
+    }
+    
+    .table tbody tr td:nth-child(1)::before {
+        content: 'الموضوع/المهمة:';
+    }
+    
+    .table tbody tr td:nth-child(2)::before {
+        content: 'الإدارة:';
+    }
+    
+    .table tbody tr td:nth-child(3)::before {
+        content: 'المسؤول:';
+    }
+    
+    .table tbody tr td:nth-child(4)::before {
+        content: 'تاريخ البدء:';
+    }
+    
+    .table tbody tr td:nth-child(5)::before {
+        content: 'التاريخ المتوقع:';
+    }
+    
+    .table tbody tr td:nth-child(6)::before {
+        content: 'الحالة:';
+    }
+    
+    .table tbody tr td:nth-child(7)::before {
+        content: 'نسبة التقدم:';
+    }
 }
 
 @media (max-width: 576px) {
@@ -525,3 +597,118 @@
     }
 }
 
+/* في نهاية ملف dashboard.css أضف */
+
+/* تصميم الجدول كبطاقات للشاشات الصغيرة - لوحة المعلومات */
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: visible;
+        max-height: none;
+    }
+
+    #tasksPreviewTable {
+        display: block;
+        width: 100%;
+        border: none;
+    }
+
+    #tasksPreviewTable thead {
+        display: none;
+    }
+
+    #tasksPreviewTable tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    #tasksPreviewTable tbody tr {
+        display: block;
+        width: 100%;
+        margin-bottom: 0;
+        padding: 1.25rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border-color);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        page-break-inside: avoid;
+    }
+
+    #tasksPreviewTable tbody tr:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    #tasksPreviewTable tbody td {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border: none;
+        border-bottom: 1px solid #f0f0f0;
+        align-items: center;
+        text-align: right;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+
+    #tasksPreviewTable tbody td:last-child {
+        border-bottom: none;
+    }
+
+    /* إضافة التسميات للبطاقات */
+    #tasksPreviewTable tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--primary-color);
+        text-align: right;
+        font-size: 0.9rem;
+    }
+
+    /* تنسيق خاص للعنوان الرئيسي */
+    #tasksPreviewTable tbody tr td:first-child {
+        display: block;
+        padding: 0 0 0.75rem 0;
+        margin-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-color);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        grid-column: 1 / -1;
+    }
+
+    #tasksPreviewTable tbody tr td:first-child::before {
+        display: none;
+    }
+
+    /* إضافة data-label للخلايا */
+    #tasksPreviewTable tbody tr td:nth-child(1)::before {
+        content: 'الموضوع/المهمة:';
+    }
+    
+    #tasksPreviewTable tbody tr td:nth-child(2)::before {
+        content: 'الإدارة:';
+    }
+    
+    #tasksPreviewTable tbody tr td:nth-child(3)::before {
+        content: 'المسؤول:';
+    }
+    
+    #tasksPreviewTable tbody tr td:nth-child(4)::before {
+        content: 'تاريخ البدء:';
+    }
+    
+    #tasksPreviewTable tbody tr td:nth-child(5)::before {
+        content: 'التاريخ المتوقع:';
+    }
+    
+    #tasksPreviewTable tbody tr td:nth-child(6)::before {
+        content: 'الحالة:';
+    }
+    
+    #tasksPreviewTable tbody tr td:nth-child(7)::before {
+        content: 'نسبة التقدم:';
+    }
+}
