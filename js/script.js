@@ -19,7 +19,7 @@ function excelSerialToDate(serial) {
 }
 
 // عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeEventListeners();
 });
 
@@ -28,15 +28,15 @@ function initializeEventListeners() {
     const fileInput = document.getElementById('excelFile');
     const dashboardBtn = document.getElementById('dashboardBtn');
     const yearBtn = document.getElementById('yearBtn');
-    
+
     if (fileInput) {
         fileInput.addEventListener('change', handleFileSelect);
     }
-    
+
     if (dashboardBtn) {
         dashboardBtn.addEventListener('click', goToDashboard);
     }
-    
+
     if (yearBtn) {
         yearBtn.addEventListener('click', showYearInfo);
     }
@@ -45,21 +45,21 @@ function initializeEventListeners() {
 // معالجة اختيار الملف
 function handleFileSelect(event) {
     const file = event.target.files[0];
-    
+
     if (!file) {
         hideFileInfo();
         return;
     }
-    
+
     // التحقق من نوع الملف
     if (!isValidExcelFile(file)) {
         showError('يرجى اختيار ملف Excel صحيح (.xlsx أو .xls)');
         return;
     }
-    
+
     // عرض معلومات الملف
     showFileInfo(file);
-    
+
     // قراءة الملف
     readExcelFile(file);
 }
@@ -70,10 +70,10 @@ function isValidExcelFile(file) {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
         'application/vnd.ms-excel' // .xls
     ];
-    
-    return validTypes.includes(file.type) || 
-           file.name.toLowerCase().endsWith('.xlsx') || 
-           file.name.toLowerCase().endsWith('.xls');
+
+    return validTypes.includes(file.type) ||
+        file.name.toLowerCase().endsWith('.xlsx') ||
+        file.name.toLowerCase().endsWith('.xls');
 }
 
 // عرض معلومات الملف
@@ -82,7 +82,7 @@ function showFileInfo(file) {
     const fileName = document.getElementById('fileName');
     const fileSize = document.getElementById('fileSize');
     const actionButtons = document.getElementById('actionButtons');
-    
+
     if (fileInfo && fileName && fileSize) {
         fileName.textContent = file.name;
         fileSize.textContent = formatFileSize(file.size);
@@ -116,33 +116,33 @@ function formatFileSize(bytes) {
 // قراءة ملف Excel
 function readExcelFile(file) {
     const reader = new FileReader();
-    
-    reader.onload = function(e) {
+
+    reader.onload = function (e) {
         try {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
-            
+
             // قراءة الورقة الأولى
             const firstSheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[firstSheetName];
-            
+
             // تحويل إلى JSON
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false });
-            
+
             // معالجة البيانات
             processExcelData(jsonData);
-            
+
             showSuccess('تم تحميل الملف بنجاح!');
         } catch (error) {
             console.error('خطأ في قراءة الملف:', error);
             showError('حدث خطأ في قراءة الملف. يرجى التأكد من صحة الملف.');
         }
     };
-    
-    reader.onerror = function() {
+
+    reader.onerror = function () {
         showError('حدث خطأ في قراءة الملف.');
     };
-    
+
     reader.readAsArrayBuffer(file);
 }
 
@@ -157,15 +157,15 @@ function processExcelData(rawData) {
                 break;
             }
         }
-        
+
         if (headerRowIndex === -1) {
             throw new Error('لم يتم العثور على رأس الجدول');
         }
-        
+
         // استخراج الرأس والبيانات
         const headers = rawData[headerRowIndex];
         const dataRows = rawData.slice(headerRowIndex + 1);
-        
+
         // تنظيف البيانات
         const cleanedData = dataRows
             .filter(row => row && row.length > 0 && row[0]) // إزالة الصفوف الفارغة تمامًا
@@ -178,29 +178,36 @@ function processExcelData(rawData) {
                         if (header === 'تاريخ  بدء المهمه' || header === 'التاريخ المتوقع لانهاء المهمة' || header === 'التاريخ الفعلي لانتهاء المهمة') {
                             value = excelSerialToDate(value);
                         }
+                        // تطبيع اسم الإدارة
+                        if (header === 'الإدارة' && value) {
+                            value = value.trim()
+                                .replace(/\s+/g, ' ')
+                                .replace(/أ/g, 'ا')
+                                .replace(/إ/g, 'ا');
+                        }
                         task[header] = value;
                     }
                 });
-                
+
                 // تحديد الحالة بشكل صحيح بناءً على البيانات الفعلية
                 const status = task['الحالة'] || '';
                 const expectedDate = task['التاريخ المتوقع لانهاء المهمة'];
                 const actualDate = task['التاريخ الفعلي لانتهاء المهمة'];
-                
+
                 // إذا كانت الحالة محددة مسبقًا، احتفظ بها
                 if (status && status !== '-') {
                     task['الحالة'] = status;
-                } 
+                }
                 // إذا لم تكن الحالة محددة، حددها بناءً على التواريخ
-                else if (expectedDate !== 'مستمرة' && expectedDate !== '-' && 
-                         new Date(expectedDate) < new Date() && (!actualDate || actualDate === '-')) {
+                else if (expectedDate !== 'مستمرة' && expectedDate !== '-' &&
+                    new Date(expectedDate) < new Date() && (!actualDate || actualDate === '-')) {
                     task['الحالة'] = 'متأخر';
                 } else if (actualDate && actualDate !== '-') {
                     task['الحالة'] = 'مكتمل';
                 } else {
                     task['الحالة'] = 'جاري العمل';
                 }
-                
+
                 // نسبة التقدم تلقائيًا
                 if (!task['نسبة التقدم']) {
                     if (task['الحالة'].includes('مكتمل')) {
@@ -213,10 +220,10 @@ function processExcelData(rawData) {
                         task['نسبة التقدم'] = 0;
                     }
                 }
-                
+
                 return task;
             });
-        
+
         // حفظ البيانات
         excelData = rawData;
         processedData = {
@@ -224,9 +231,9 @@ function processExcelData(rawData) {
             tasks: cleanedData,
             summary: calculateSummary(cleanedData)
         };
-        
+
         console.log('تم معالجة البيانات:', processedData);
-        
+
     } catch (error) {
         console.error('خطأ في معالجة البيانات:', error);
         showError('حدث خطأ في معالجة البيانات: ' + error.message);
@@ -243,7 +250,7 @@ function calculateSummary(tasks) {
         departments: new Set(),
         responsiblePersons: new Set()
     };
-    
+
     tasks.forEach(task => {
         // حساب حالات المهام
         const status = task['الحالة'] || '';
@@ -254,29 +261,29 @@ function calculateSummary(tasks) {
         } else if (status.includes('جاري')) {
             summary.inProgressTasks++;
         }
-        
+
         // جمع جميع الإدارات من ملف الإكسل (مع استبعاد الإدارة العامة للتميز المؤسسي)
         if (task['الإدارة']) {
             let deptName = task['الإدارة'].trim()
                 .replace(/\s+/g, ' ') // توحيد المسافات
                 .replace(/أ/g, 'ا') // توحيد الألف
                 .replace(/إ/g, 'ا'); // توحيد الألف
-            
+
             // استبعاد الإدارة العامة للتميز المؤسسي
-            if (deptName && deptName !== '-' && deptName !== '' && 
-                !deptName.includes('الادارة العامة للتميز') && 
+            if (deptName && deptName !== '-' && deptName !== '' &&
+                !deptName.includes('الادارة العامة للتميز') &&
                 !deptName.includes('الإدارة العامة للتميز')) {
                 summary.departments.add(deptName);
             }
         }
-        
+
         // جمع جميع المسؤولين من ملف الإكسل بدون فلترة
         if (task['المسؤول عن المهمه']) {
             const respText = task['المسؤول عن المهمه'].trim();
             if (respText && respText !== '-' && respText !== '') {
                 // تقسيم الأسماء المتعددة (مفصولة بـ + أو ، أو /)
                 const names = respText.split(/[\+،,\/]/);
-                
+
                 names.forEach(name => {
                     // تنظيف الاسم من الألقاب والمسافات الزائدة
                     let cleanName = name.trim()
@@ -285,7 +292,7 @@ function calculateSummary(tasks) {
                         .replace(/أ/g, 'ا') // توحيد الألف
                         .replace(/إ/g, 'ا') // توحيد الألف
                         .trim();
-                    
+
                     if (cleanName && cleanName !== '-' && cleanName !== '') {
                         summary.responsiblePersons.add(cleanName);
                     }
@@ -293,16 +300,16 @@ function calculateSummary(tasks) {
             }
         }
     });
-    
+
     // تحويل Sets إلى arrays وترتيبها
     summary.departments = Array.from(summary.departments).sort();
     summary.responsiblePersons = Array.from(summary.responsiblePersons).sort();
-    
+
     // حساب نسبة الإنجاز
-    summary.completionRate = summary.totalTasks > 0 
-        ? Math.round((summary.completedTasks / summary.totalTasks) * 100) 
+    summary.completionRate = summary.totalTasks > 0
+        ? Math.round((summary.completedTasks / summary.totalTasks) * 100)
         : 0;
-    
+
     return summary;
 }
 
@@ -312,10 +319,10 @@ function goToDashboard() {
         showError('يرجى رفع ملف البيانات أولاً');
         return;
     }
-    
+
     // حفظ البيانات في localStorage
     localStorage.setItem('excelData', JSON.stringify(processedData));
-    
+
     // الانتقال إلى لوحة المعلومات
     window.location.href = 'dashboard.html';
 }
@@ -354,7 +361,7 @@ function showNotification(message, type = 'info') {
             </button>
         </div>
     `;
-    
+
     // إضافة الأنماط إذا لم تكن موجودة
     if (!document.getElementById('notification-styles')) {
         const styles = document.createElement('style');
@@ -421,10 +428,10 @@ function showNotification(message, type = 'info') {
         `;
         document.head.appendChild(styles);
     }
-    
+
     // إضافة الإشعار إلى الصفحة
     document.body.appendChild(notification);
-    
+
     // إزالة الإشعار تلقائياً بعد 5 ثوان
     setTimeout(() => {
         if (notification.parentElement) {
