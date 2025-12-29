@@ -20,14 +20,14 @@ function excelSerialToDate(serial) {
 }
 
 // عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeDashboard();
 });
 
 // تهيئة لوحة المعلومات
 function initializeDashboard() {
     const storedData = localStorage.getItem('excelData');
-    
+
     if (storedData) {
         try {
             dashboardData = JSON.parse(storedData);
@@ -35,16 +35,24 @@ function initializeDashboard() {
                 task['تاريخ  بدء المهمه'] = excelSerialToDate(task['تاريخ  بدء المهمه']);
                 task['التاريخ المتوقع لانهاء المهمة'] = excelSerialToDate(task['التاريخ المتوقع لانهاء المهمة']);
                 task['التاريخ الفعلي لانتهاء المهمة'] = excelSerialToDate(task['التاريخ الفعلي لانتهاء المهمة']);
-                
+
+                // تطبيع اسم الإدارة
+                if (task['الإدارة']) {
+                    task['الإدارة'] = task['الإدارة'].trim()
+                        .replace(/\s+/g, ' ')
+                        .replace(/أ/g, 'ا')
+                        .replace(/إ/g, 'ا');
+                }
+
                 // حساب متأخر بدقة، ومعاملة "التسليم اليوم" كمتأخر
                 let status = task['الحالة'] || '';
                 const expectedSerial = parseFloat(task['التاريخ المتوقع لانهاء المهمة']);
                 const actualDate = task['التاريخ الفعلي لانتهاء المهمة'];
-                
+
                 if (status.includes('التسليم اليوم')) {
                     status = 'متأخر';
                 }
-                
+
                 if (!status || status === '-') {
                     if (!isNaN(expectedSerial) && expectedSerial < currentDateSerial && (!actualDate || actualDate === '-')) {
                         status = 'متأخر';
@@ -54,9 +62,9 @@ function initializeDashboard() {
                         status = 'جاري العمل';
                     }
                 }
-                
+
                 task['الحالة'] = status;
-                
+
                 // نسبة التقدم تلقائيًا
                 if (!task['نسبة التقدم']) {
                     task['نسبة التقدم'] = status.includes('مكتمل') ? 1 : status.includes('جاري') ? 0.5 : 0.25;
@@ -87,32 +95,32 @@ function loadDashboard() {
 // تحديث البطاقات الإحصائية
 function updateStatsCards() {
     const summary = dashboardData.summary;
-    
+
     document.getElementById('totalTasks').textContent = summary.totalTasks;
     document.getElementById('completedTasks').textContent = summary.completedTasks;
-    document.getElementById('completedPercentage').textContent = 
+    document.getElementById('completedPercentage').textContent =
         Math.round((summary.completedTasks / summary.totalTasks) * 100) + '%';
-    
+
     document.getElementById('delayedTasks').textContent = summary.delayedTasks;
-    document.getElementById('delayedPercentage').textContent = 
+    document.getElementById('delayedPercentage').textContent =
         Math.round((summary.delayedTasks / summary.totalTasks) * 100) + '%';
-    
+
     document.getElementById('inProgressTasks').textContent = summary.inProgressTasks;
-    document.getElementById('inProgressPercentage').textContent = 
+    document.getElementById('inProgressPercentage').textContent =
         Math.round((summary.inProgressTasks / summary.totalTasks) * 100) + '%';
-    
+
     animateNumbers();
 }
 
 // تحريك الأرقام
 function animateNumbers() {
     const numbers = document.querySelectorAll('.stats-number');
-    
+
     numbers.forEach(element => {
         const target = parseInt(element.textContent);
         let current = 0;
         const increment = target / 50;
-        
+
         const timer = setInterval(() => {
             current += increment;
             if (current >= target) {
@@ -134,7 +142,7 @@ function createCharts() {
 function createStatusChart() {
     const ctx = document.getElementById('statusChart').getContext('2d');
     const summary = dashboardData.summary;
-    
+
     statusChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -167,7 +175,7 @@ function createStatusChart() {
                 },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = Math.round((context.parsed / total) * 100);
                             return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
@@ -192,7 +200,7 @@ function createStatusChart() {
 // إنشاء رسم بياني للإدارات
 function createDepartmentChart() {
     const ctx = document.getElementById('departmentChart').getContext('2d');
-    
+
     const departmentCounts = {};
     dashboardData.tasks.forEach(task => {
         if (task['الإدارة']) {
@@ -200,19 +208,19 @@ function createDepartmentChart() {
                 .replace(/\s+/g, ' ') // توحيد المسافات
                 .replace(/أ/g, 'ا') // توحيد الألف
                 .replace(/إ/g, 'ا'); // توحيد الألف
-            
+
             // استبعاد الإدارة العامة للتميز المؤسسي
-            if (dept && dept !== '-' && dept !== '' && 
-                !dept.includes('الادارة العامة للتميز') && 
+            if (dept && dept !== '-' && dept !== '' &&
+                !dept.includes('الادارة العامة للتميز') &&
                 !dept.includes('الإدارة العامة للتميز')) {
                 departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
             }
         }
     });
-    
+
     const labels = Object.keys(departmentCounts);
     const data = Object.values(departmentCounts);
-    
+
     departmentChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -272,16 +280,16 @@ function createDepartmentChart() {
 function updateInfoLists() {
     const departmentsList = document.getElementById('departmentsList');
     departmentsList.innerHTML = '';
-    
+
     dashboardData.summary.departments.forEach(dept => {
         const li = document.createElement('li');
         li.textContent = dept;
         departmentsList.appendChild(li);
     });
-    
+
     const responsibleList = document.getElementById('responsibleList');
     responsibleList.innerHTML = '';
-    
+
     dashboardData.summary.responsiblePersons.forEach(person => {
         const li = document.createElement('li');
         li.textContent = person;
@@ -290,15 +298,16 @@ function updateInfoLists() {
 }
 
 // تحديث معاينة الجدول
+// تحديث معاينة الجدول
 function updateTablePreview() {
     const tbody = document.getElementById('tasksPreviewBody');
     tbody.innerHTML = '';
-    
+
     const previewTasks = dashboardData.tasks.slice(0, 5);
-    
+
     previewTasks.forEach(task => {
         const row = document.createElement('tr');
-        
+
         const taskName = task['الموضوع/المهمة'].toLowerCase();
         if (taskName.includes('efqm') || taskName.includes('iso')) {
             row.classList.add('highlight-yellow');
@@ -307,38 +316,44 @@ function updateTablePreview() {
         } else if (taskName.includes('27001') || taskName.includes('الأمن السيبراني')) {
             row.classList.add('highlight-blue');
         }
-        
+
         const taskCell = document.createElement('td');
         taskCell.textContent = task['الموضوع/المهمة'] || '-';
+        taskCell.setAttribute('data-label', 'الموضوع/المهمة');
         taskCell.style.maxWidth = '200px';
         taskCell.style.overflow = 'hidden';
         taskCell.style.textOverflow = 'ellipsis';
         taskCell.style.whiteSpace = 'nowrap';
         row.appendChild(taskCell);
-        
+
         const deptCell = document.createElement('td');
         deptCell.textContent = task['الإدارة'] || '-';
+        deptCell.setAttribute('data-label', 'الإدارة');
         row.appendChild(deptCell);
-        
+
         const responsibleCell = document.createElement('td');
         responsibleCell.textContent = task['المسؤول عن المهمه'] || '-';
+        responsibleCell.setAttribute('data-label', 'المسؤول');
         row.appendChild(responsibleCell);
-        
+
         const startCell = document.createElement('td');
         startCell.textContent = task['تاريخ  بدء المهمه'] || '-';
+        startCell.setAttribute('data-label', 'تاريخ البدء');
         row.appendChild(startCell);
-        
+
         const expectedCell = document.createElement('td');
         expectedCell.textContent = task['التاريخ المتوقع لانهاء المهمة'] || '-';
+        expectedCell.setAttribute('data-label', 'التاريخ المتوقع');
         row.appendChild(expectedCell);
-        
+
         const statusCell = document.createElement('td');
         const statusBadge = document.createElement('span');
         const status = task['الحالة'] || '';
-        
+
         statusBadge.textContent = status || 'غير محدد';
         statusBadge.className = 'status-badge';
-        
+        statusCell.setAttribute('data-label', 'الحالة');
+
         if (status.includes('مكتمل')) {
             statusBadge.classList.add('status-completed');
         } else if (status.includes('متأخر')) {
@@ -346,26 +361,26 @@ function updateTablePreview() {
         } else {
             statusBadge.classList.add('status-in-progress');
         }
-        
+
         statusCell.appendChild(statusBadge);
         row.appendChild(statusCell);
-        
+
         const progressCell = document.createElement('td');
         const progress = task['نسبة التقدم'] || 0;
         progressCell.textContent = (progress * 100).toFixed(0) + '%';
+        progressCell.setAttribute('data-label', 'نسبة التقدم');
         row.appendChild(progressCell);
-        
+
         tbody.appendChild(row);
     });
 }
-
 // تحديث شريط التقدم
 function updateProgressBar() {
     const summary = dashboardData.summary;
     const completionRate = summary.completionRate;
-    
+
     document.getElementById('overallProgress').textContent = completionRate + '%';
-    
+
     setTimeout(() => {
         document.getElementById('progressFill').style.width = completionRate + '%';
     }, 500);
@@ -389,7 +404,7 @@ function showFullTable() {
 }
 
 // تنظيف الرسوم البيانية عند إغلاق الصفحة
-window.addEventListener('beforeunload', function() {
+window.addEventListener('beforeunload', function () {
     if (statusChart) {
         statusChart.destroy();
     }
@@ -399,7 +414,7 @@ window.addEventListener('beforeunload', function() {
 });
 
 // إعادة تحجيم الرسوم البيانية عند تغيير حجم النافذة
-window.addEventListener('resize', function() {
+window.addEventListener('resize', function () {
     if (statusChart) {
         statusChart.resize();
     }
@@ -419,11 +434,11 @@ function calculateSummary(tasks) {
         departments: new Set(),
         responsiblePersons: new Set()
     };
-    
+
     tasks.forEach(task => {
         // حساب الإجمالي
         summary.totalTasks++;
-        
+
         // حساب حالات المهام
         const status = task['الحالة'] || '';
         if (status.includes('مكتمل')) {
@@ -433,29 +448,29 @@ function calculateSummary(tasks) {
         } else if (status.includes('جاري')) {
             summary.inProgressTasks++;
         }
-        
+
         // جمع جميع الإدارات من ملف الإكسل (مع استبعاد الإدارة العامة للتميز المؤسسي)
         if (task['الإدارة']) {
             let deptName = task['الإدارة'].trim()
                 .replace(/\s+/g, ' ') // توحيد المسافات
                 .replace(/أ/g, 'ا') // توحيد الألف
                 .replace(/إ/g, 'ا'); // توحيد الألف
-            
+
             // استبعاد الإدارة العامة للتميز المؤسسي
-            if (deptName && deptName !== '-' && deptName !== '' && 
-                !deptName.includes('الادارة العامة للتميز') && 
+            if (deptName && deptName !== '-' && deptName !== '' &&
+                !deptName.includes('الادارة العامة للتميز') &&
                 !deptName.includes('الإدارة العامة للتميز')) {
                 summary.departments.add(deptName);
             }
         }
-        
+
         // جمع جميع المسؤولين من ملف الإكسل بدون فلترة
         if (task['المسؤول عن المهمه']) {
             const respText = task['المسؤول عن المهمه'].trim();
             if (respText && respText !== '-' && respText !== '') {
                 // تقسيم الأسماء المتعددة (مفصولة بـ + أو ، أو /)
                 const names = respText.split(/[\+،,\/]/);
-                
+
                 names.forEach(name => {
                     // تنظيف الاسم من الألقاب والمسافات الزائدة
                     let cleanName = name.trim()
@@ -464,7 +479,7 @@ function calculateSummary(tasks) {
                         .replace(/أ/g, 'ا') // توحيد الألف
                         .replace(/إ/g, 'ا') // توحيد الألف
                         .trim();
-                    
+
                     if (cleanName && cleanName !== '-' && cleanName !== '') {
                         summary.responsiblePersons.add(cleanName);
                     }
@@ -472,12 +487,12 @@ function calculateSummary(tasks) {
             }
         }
     });
-    
+
     // تحويل Sets إلى arrays وترتيبها
     summary.departments = Array.from(summary.departments).sort();
     summary.responsiblePersons = Array.from(summary.responsiblePersons).sort();
     summary.completionRate = summary.totalTasks > 0 ? Math.round((summary.completedTasks / summary.totalTasks) * 100) : 0;
-    
+
     return summary;
 }
 // دالة فلتر المهام عند النقر على الكارد
